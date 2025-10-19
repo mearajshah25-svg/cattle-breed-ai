@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animal Type Classification System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .upload-section {
+            border: 3px dashed #667eea;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-section:hover {
+            background: #e9ecef;
+            border-color: #764ba2;
+        }
+
+        .upload-section.dragover {
+            background: #d5d9ff;
+            border-color: #667eea;
+        }
+
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: transform 0.2s;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .option-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+
+        .option-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .option-group select,
+        .option-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .preview-section {
+            margin: 30px 0;
+            display: none;
+        }
+
+        .preview-image {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .score-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .score-value {
+            font-size: 4em;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .grade-badge {
+            display: inline-block;
+            padding: 10px 30px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            font-size: 1.2em;
+            font-weight: 600;
+        }
+
+        .category-scores {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .category-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .category-card h3 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+
+        .category-score {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .measurements {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .measurements h3 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+
+        .measurement-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .measurement-item:last-child {
+            border-bottom: none;
+        }
+
+        .recommendations {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .recommendations h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .recommendations ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .recommendations li {
+            padding: 8px 0;
+            color: #856404;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #dc3545;
+            display: none;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .main-content {
+                padding: 20px;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐄 Animal Type Classification System</h1>
+            <p>AI-Powered Cattle & Buffalo Evaluation | Rashtriya Gokul Mission</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Upload Section -->
+            <div class="upload-section" id="uploadSection">
+                <div class="upload-icon">📷</div>
+                <h2>Upload Animal Image</h2>
+                <p>Click to select or drag and drop an image here</p>
+                <input type="file" id="fileInput" class="file-input" accept="image/*">
+            </div>
+
+            <!-- Preview Section -->
+            <div class="preview-section" id="previewSection">
+                <h3 style="margin-bottom: 15px;">Image Preview</h3>
+                <img id="previewImage" class="preview-image" alt="Preview">
+            </div>
+
+            <!-- Options -->
+            <div class="options">
+                <div class="option-group">
+                    <label for="breedType">Animal Type</label>
+                    <select id="breedType">
+                        <option value="cattle">Cattle</option>
+                        <option value="buffalo">Buffalo</option>
+                    </select>
+                </div>
+
+                <div class="option-group">
+                    <label for="gender">Gender</label>
+                    <select id="gender">
+                        <option value="female">Female</option>
+                        <option value="male">Male</option>
+                    </select>
+                </div>
+
+                <div class="option-group">
+                    <label for="refLength">Reference Length (cm) - Optional</label>
+                    <input type="number" id="refLength" placeholder="e.g., 50">
+                </div>
+
+                <div class="option-group">
+                    <label for="refPixels">Reference Pixels - Optional</label>
+                    <input type="number" id="refPixels" placeholder="e.g., 100">
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="text-align: center;">
+                <button class="btn" id="classifyBtn" disabled>Classify Animal</button>
+                <button class="btn" id="resetBtn">Reset</button>
+            </div>
+
+            <!-- Loading -->
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing animal image...</p>
+            </div>
+
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage"></div>
+
+            <!-- Results -->
+            <div class="results" id="results">
+                <div class="score-card">
+                    <h2>Classification Results</h2>
+                    <div class="score-value" id="scoreValue">--</div>
+                    <div class="grade-badge" id="gradeBadge">--</div>
+                </div>
+
+                <div class="category-scores" id="categoryScores">
+                    <!-- Category scores will be inserted here -->
+                </div>
+
+                <div class="measurements" id="measurements">
+                    <h3>📏 Body Measurements</h3>
+                    <div id="measurementList">
+                        <!-- Measurements will be inserted here -->
+                    </div>
+                </div>
+
+                <div class="recommendations" id="recommendations">
+                    <h3>💡 Recommendations</h3>
+                    <ul id="recommendationList">
+                        <!-- Recommendations will be inserted here -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const uploadSection = document.getElementById('uploadSection');
+        const fileInput = document.getElementById('fileInput');
+        const previewSection = document.getElementById('previewSection');
+        const previewImage = document.getElementById('previewImage');
+        const classifyBtn = document.getElementById('classifyBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const loading = document.getElementById('loading');
+        const results = document.getElementById('results');
+        const errorMessage = document.getElementById('errorMessage');
+
+        let selectedFile = null;
+
+        // Upload section click
+        uploadSection.addEventListener('click', () => {
+            fileInput.click();
+        });
+
+        // File selection
+        fileInput.addEventListener('change', (e) => {
+            handleFileSelect(e.target.files[0]);
+        });
+
+        // Drag and drop
+        uploadSection.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadSection.classList.add('dragover');
+        });
+
+        uploadSection.addEventListener('dragleave', () => {
+            uploadSection.classList.remove('dragover');
+        });
+
+        uploadSection.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadSection.classList.remove('dragover');
+            handleFileSelect(e.dataTransfer.files[0]);
+        });
+
+        // Handle file selection
+        function handleFileSelect(file) {
+            if (!file) return;
+
+            if (!file.type.startsWith('image/')) {
+                showError('Please select a valid image file');
+                return;
+            }
+
+            selectedFile = file;
+            
+            // Show preview
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewSection.style.display = 'block';
+                classifyBtn.disabled = false;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Classify button click
+        classifyBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+
+            // Prepare form data
+            const formData = new FormData();
+            formData.append('image', selectedFile);
+            formData.append('breed_type', document.getElementById('breedType').value);
+            formData.append('gender', document.getElementById('gender').value);
+
+            const refLength = document.getElementById('refLength').value;
+            const refPixels = document.getElementById('refPixels').value;
+            if (refLength) formData.append('reference_length_cm', refLength);
+            if (refPixels) formData.append('reference_length_pixels', refPixels);
+
+            // Show loading
+            loading.style.display = 'block';
+            results.style.display = 'none';
+            errorMessage.style.display = 'none';
+            classifyBtn.disabled = true;
+
+            try {
+                // Call API (replace with your actual API endpoint)
+                const response = await fetch('http://localhost:5000/api/classify', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Classification failed');
+                }
+
+                const data = await response.json();
+                displayResults(data);
+
+            } catch (error) {
+                showError('Error: ' + error.message + '. Make sure the Flask server is running on port 5000.');
+            } finally {
+                loading.style.display = 'none';
+                classifyBtn.disabled = false;
+            }
+        });
+
+        // Display results
+        function displayResults(data) {
+            const result = data.classification_result;
+            
+            // Final score
+            document.getElementById('scoreValue').textContent = 
+                result.final_scores.percentage + '%';
+            document.getElementById('gradeBadge').textContent = 
+                result.final_scores.grade;
+
+            // Category scores
+            const categoryScores = document.getElementById('categoryScores');
+            categoryScores.innerHTML = '';
+            
+            result.category_scores.forEach(cat => {
+                categoryScores.innerHTML += `
+                    <div class="category-card">
+                        <h3>${cat.category}</h3>
+                        <div class="category-score">${cat.score.toFixed(1)}</div>
+                        <small>Weight: ${(cat.weight * 100).toFixed(0)}%</small>
+                    </div>
+                `;
+            });
+
+            // Measurements
+            const measurementList = document.getElementById('measurementList');
+            measurementList.innerHTML = '';
+            
+            Object.entries(data.measurements).forEach(([key, value]) => {
+                const displayName = key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                measurementList.innerHTML += `
+                    <div class="measurement-item">
+                        <span>${displayName}</span>
+                        <strong>${typeof value === 'number' ? value.toFixed(2) : value}</strong>
+                    </div>
+                `;
+            });
+
+            // Recommendations
+            const recommendationList = document.getElementById('recommendationList');
+            recommendationList.innerHTML = '';
+            
+            result.recommendations.forEach(rec => {
+                recommendationList.innerHTML += `<li>${rec}</li>`;
+            });
+
+            // Show results
+            results.style.display = 'block';
+        }
+
+        // Show error
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            setTimeout(() => {
+                errorMessage.style.display = 'none';
+            }, 5000);
+        }
+
+        // Reset button
+        resetBtn.addEventListener('click', () => {
+            selectedFile = null;
+            fileInput.value = '';
+            previewSection.style.display = 'none';
+            results.style.display = 'none';
+            errorMessage.style.display = 'none';
+            classifyBtn.disabled = true;
+        });
+    </script>
+</body>
+</html>

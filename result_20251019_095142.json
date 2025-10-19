@@ -1,0 +1,102 @@
+{
+  "success": true,
+  "timestamp": "2025-10-19T09:51:45.234539",
+  "file_info": {
+    "original_filename": "cow.jpeg",
+    "processed_filename": "20251019_095142_cow.jpeg",
+    "visualization_path": "viz_20251019_095142_cow.jpeg"
+  },
+  "classification_result": {
+    "animal_info": {
+      "breed_type": "cattle",
+      "gender": "female",
+      "evaluation_date": "2025-10-19 09:51:45"
+    },
+    "category_scores": [
+      {
+        "category": "General Appearance",
+        "score": 51.323920203027036,
+        "weight": 0.15,
+        "weighted_score": 7.698588030454055,
+        "details": {
+          "proportion": 75.82376756703059,
+          "body_length": 0,
+          "balance": 78.14799304205053
+        }
+      },
+      {
+        "category": "Dairy Character",
+        "score": 28.333333333333332,
+        "weight": 0.2,
+        "weighted_score": 5.666666666666667,
+        "details": {
+          "body_depth": 0,
+          "capacity_index": 85.0,
+          "chest_width": 0
+        }
+      },
+      {
+        "category": "Body Capacity",
+        "score": 0.0,
+        "weight": 0.2,
+        "weighted_score": 0.0,
+        "details": {
+          "stature": 0,
+          "depth": 0,
+          "chest": 0
+        }
+      },
+      {
+        "category": "Feet and Legs",
+        "score": 40.684691745036574,
+        "weight": 0.15,
+        "weighted_score": 6.102703761755486,
+        "details": {
+          "front_legs": 20.062695924764895,
+          "rear_legs": 17.241379310344826,
+          "leg_balance": 84.75
+        }
+      },
+      {
+        "category": "Rump Structure",
+        "score": 15.329292190587319,
+        "weight": 0.3,
+        "weighted_score": 4.598787657176196,
+        "details": {
+          "rump_angle": 0,
+          "rump_length": 20.48787657176196,
+          "rump_width": 25.5
+        }
+      }
+    ],
+    "final_scores": {
+      "percentage": 24.07,
+      "linear_scale": 2.93,
+      "grade": "Poor"
+    },
+    "recommendations": [
+      "\u26a0\ufe0f General Appearance needs improvement (Score: 51.3)",
+      "\u26a0\ufe0f Dairy Character needs improvement (Score: 28.3)",
+      "\u26a0\ufe0f Body Capacity needs improvement (Score: 0.0)",
+      "\u26a0\ufe0f Feet and Legs needs improvement (Score: 40.7)",
+      "\u26a0\ufe0f Rump Structure needs improvement (Score: 15.3)",
+      "\ud83d\udccf Body depth below standard - focus on nutrition",
+      "\ud83d\udd04 Rump angle outside ideal range - consider in breeding selection"
+    ]
+  },
+  "measurements": {
+    "body_length": 39.20459156782532,
+    "height_at_withers": 24.0,
+    "body_depth": 15.0,
+    "chest_width": 12.0,
+    "rump_length": 9.219544457292887,
+    "rump_width": 12.75,
+    "rump_angle": 130.2363583092738,
+    "back_straightness": 179.3704013915899,
+    "front_leg_length": 16.0,
+    "rear_leg_length": 15.0,
+    "body_capacity_index": 62.5,
+    "body_proportion": 1.6335246486593882
+  },
+  "keypoints_detected": 15
+}
